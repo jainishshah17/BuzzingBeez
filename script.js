@@ -25,7 +25,7 @@ const GOOGLE_FORM_CONFIG = {
   fields: {
     parentName: 'entry.1888711343',
     childAge: 'entry.488885004',
-    startDate: 'entry.1094695771',
+    startDate: 'entry.1094695771', // Google date field base key
     phone: 'entry.964629371',
     message: 'entry.794793296'
   }
@@ -53,7 +53,13 @@ if (form) {
     const payload = new URLSearchParams();
     payload.append(GOOGLE_FORM_CONFIG.fields.parentName, formData.get('parentName') || '');
     payload.append(GOOGLE_FORM_CONFIG.fields.childAge, formData.get('childAge') || '');
-    payload.append(GOOGLE_FORM_CONFIG.fields.startDate, formData.get('startDate') || '');
+    const startDateValue = String(formData.get('startDate') || '');
+    if (startDateValue) {
+      const [year, month, day] = startDateValue.split('-');
+      payload.append(`${GOOGLE_FORM_CONFIG.fields.startDate}_year`, year || '');
+      payload.append(`${GOOGLE_FORM_CONFIG.fields.startDate}_month`, month || '');
+      payload.append(`${GOOGLE_FORM_CONFIG.fields.startDate}_day`, day || '');
+    }
     payload.append(GOOGLE_FORM_CONFIG.fields.phone, formData.get('phone') || '');
     payload.append(GOOGLE_FORM_CONFIG.fields.message, formData.get('message') || '');
 
