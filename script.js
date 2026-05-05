@@ -23,6 +23,7 @@ const GOOGLE_FORM_CONFIG = {
   // Replace with your Google Form "formResponse" endpoint
   formAction: 'https://docs.google.com/forms/d/e/1FAIpQLSf3vF4XCEYmsnPwg5ldDNoIBwY40u8qDvhmAHCkD1tBCrZDQA/formResponse',
   fields: {
+    email: 'emailAddress',
     parentName: 'entry.1888711343',
     childAge: 'entry.488885004',
     startDate: 'entry.1094695771', // Google date field base key
@@ -51,6 +52,7 @@ if (form) {
     }
 
     const payload = new URLSearchParams();
+    payload.append(GOOGLE_FORM_CONFIG.fields.email, formData.get('email') || '');
     payload.append(GOOGLE_FORM_CONFIG.fields.parentName, formData.get('parentName') || '');
     payload.append(GOOGLE_FORM_CONFIG.fields.childAge, formData.get('childAge') || '');
     const startDateValue = String(formData.get('startDate') || '');
