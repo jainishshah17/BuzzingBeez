@@ -88,6 +88,9 @@ textarea { min-height: 120px; resize: vertical; }
   background: #1f2937; color: #e5e7eb; padding: 1.6rem 0; margin-top: 2rem;
 }
 .footer-grid { display: grid; gap: .45rem; font-size: .95rem; }
+.social-links { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+.social-links a { color: var(--yellow); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.social-links a:hover { color: var(--orange); }
 .fade-in { opacity: 0; transform: translateY(18px); transition: .5s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 @media (min-width: 768px) {
