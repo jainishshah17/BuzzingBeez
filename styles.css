@@ -67,6 +67,153 @@ main { padding: 1.5rem 0 3rem; }
   box-shadow: var(--shadow);
 }
 
+.meet-pratiksha {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(244, 180, 0, 0.18);
+  border-radius: 28px;
+  padding: clamp(1.1rem, 4vw, 2.4rem);
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 224, 138, 0.52), transparent 28%),
+    radial-gradient(circle at 88% 8%, rgba(216, 245, 227, 0.65), transparent 24%),
+    linear-gradient(135deg, rgba(255, 253, 248, 0.98), rgba(217, 237, 255, 0.48));
+  box-shadow: 0 18px 45px rgba(25, 38, 60, 0.11);
+}
+.meet-pratiksha::before {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 22px;
+  pointer-events: none;
+}
+.meet-pratiksha__photo-wrap {
+  position: relative;
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+}
+.meet-pratiksha__accent {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(1px);
+  animation: float-soft 8s ease-in-out infinite;
+}
+.meet-pratiksha__accent--sun {
+  width: 12rem;
+  height: 12rem;
+  top: 0.3rem;
+  left: 0.2rem;
+  background: rgba(255, 224, 138, 0.7);
+}
+.meet-pratiksha__accent--mint {
+  width: 15rem;
+  height: 15rem;
+  right: 0;
+  bottom: 0.2rem;
+  background: rgba(216, 245, 227, 0.78);
+  animation-delay: -3s;
+}
+.meet-pratiksha__photo-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 390px);
+  margin: 0;
+  overflow: hidden;
+  border: 10px solid rgba(255, 255, 255, 0.88);
+  border-radius: 32px;
+  background: white;
+  box-shadow: 0 20px 42px rgba(45, 55, 72, 0.16);
+  transform: rotate(-2deg);
+}
+.meet-pratiksha__photo-card img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 58% 42%;
+}
+.meet-pratiksha__photo-card figcaption {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  border-radius: 999px;
+  padding: .65rem .85rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: #7a4c00;
+  font-size: .88rem;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(25, 38, 60, 0.1);
+}
+.meet-pratiksha__content {
+  position: relative;
+  z-index: 1;
+}
+.meet-pratiksha__eyebrow {
+  background: rgba(255, 224, 138, 0.72);
+  color: #7a4c00;
+  font-weight: 700;
+}
+.meet-pratiksha h2 {
+  margin: .65rem 0 .8rem;
+  line-height: 1.1;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+}
+.meet-pratiksha__bio {
+  display: grid;
+  gap: .8rem;
+  color: var(--muted);
+}
+.meet-pratiksha__bio p {
+  margin: 0;
+}
+.meet-pratiksha__bio strong {
+  color: var(--text);
+  font-size: 1.08rem;
+}
+.meet-pratiksha__quote {
+  margin: 1.2rem 0;
+  border-left: 6px solid var(--accent);
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  background: rgba(255, 255, 255, 0.78);
+  color: #6b4600;
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  font-weight: 700;
+  box-shadow: 0 12px 30px rgba(25, 38, 60, 0.08);
+}
+.meet-pratiksha__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem;
+}
+.meet-pratiksha__badges span {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  border: 1px solid rgba(212, 220, 230, 0.85);
+  border-radius: 999px;
+  padding: .55rem .8rem;
+  background: rgba(255, 255, 255, 0.82);
+  color: #384252;
+  font-size: .88rem;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(25, 38, 60, 0.06);
+}
+.meet-pratiksha__actions {
+  margin-top: 1.25rem;
+}
+@keyframes float-soft {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0.45rem, -0.65rem, 0) scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .meet-pratiksha__accent { animation: none; }
+}
+
 .schedule-list {
   display: grid;
   gap: .75rem;
@@ -133,6 +280,7 @@ textarea { min-height: 120px; resize: vertical; }
   .menu-toggle { display: none; }
   .nav-links { display: flex !important; flex-direction: row; align-items: center; gap: .4rem; padding: 0; }
   .hero { grid-template-columns: 1.2fr .8fr; }
+  .meet-pratiksha { grid-template-columns: .9fr 1.1fr; align-items: center; }
   .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
   .grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
   .schedule-item { grid-template-columns: 11rem 1fr; gap: 1rem; }
