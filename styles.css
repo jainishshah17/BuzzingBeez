@@ -66,6 +66,20 @@ main { padding: 1.5rem 0 3rem; }
   background: var(--surface); border-radius: var(--radius); padding: 1rem;
   box-shadow: var(--shadow);
 }
+.section-lead { color: var(--muted); margin: -0.35rem 0 1rem; max-width: 42rem; }
+.text-link {
+  color: #b45309;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.text-link:hover { color: #92400e; }
+.faq-list { margin: 0; }
+.faq-list dt { font-weight: 600; margin-top: 1rem; color: var(--text); }
+.faq-list dt:first-child { margin-top: 0; }
+.faq-list dd { margin: 0.35rem 0 0; color: var(--muted); padding: 0; }
+.menu-note { margin-top: 1rem; }
+.menu-note p { margin: 0; color: var(--muted); }
 
 .meet-pratiksha {
   position: relative;
@@ -269,6 +283,12 @@ textarea { min-height: 120px; resize: vertical; }
 }
 .site-footer {
   background: #1f2937; color: #e5e7eb; padding: 1.6rem 0; margin-top: 2rem;
+}
+.site-footer .footer-grid span:not(.social-links) a {
+  color: var(--yellow);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .footer-grid { display: grid; gap: .45rem; font-size: .95rem; }
 .social-links { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
