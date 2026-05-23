@@ -95,3 +95,57 @@ if (modal) {
   });
   modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
 }
+
+const INSTAGRAM_CONFIG = {
+  userId: '', // e.g. "17841400000000000"
+  accessToken: '', // Long-lived Instagram Graph API token
+  limit: 12
+};
+
+const instagramFeedGrid = document.querySelector('#instagram-feed-grid');
+const instagramFeedMessage = document.querySelector('#instagram-feed-message');
+
+async function loadInstagramActivities() {
+  if (!instagramFeedGrid || !instagramFeedMessage) return;
+
+  if (!INSTAGRAM_CONFIG.userId || !INSTAGRAM_CONFIG.accessToken) {
+    instagramFeedMessage.textContent = 'To display all activities here, connect an Instagram Graph API user ID + access token in script.js.';
+    return;
+  }
+
+  const endpoint = new URL(`https://graph.facebook.com/v21.0/${INSTAGRAM_CONFIG.userId}/media`);
+  endpoint.searchParams.set('fields', 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp');
+  endpoint.searchParams.set('limit', String(INSTAGRAM_CONFIG.limit));
+  endpoint.searchParams.set('access_token', INSTAGRAM_CONFIG.accessToken);
+
+  try {
+    const response = await fetch(endpoint);
+    if (!response.ok) throw new Error('Instagram request failed');
+
+    const payload = await response.json();
+    const posts = Array.isArray(payload.data) ? payload.data : [];
+
+    if (!posts.length) {
+      instagramFeedMessage.textContent = 'No Instagram activities were returned yet. Please check the account access settings.';
+      return;
+    }
+
+    instagramFeedGrid.innerHTML = posts.map((post) => {
+      const mediaUrl = post.media_type === 'VIDEO' ? (post.thumbnail_url || post.media_url) : post.media_url;
+      const postedDate = new Date(post.timestamp).toLocaleDateString();
+      const caption = (post.caption || 'View Instagram activity').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `
+        <a class="instagram-activity" href="${post.permalink}" target="_blank" rel="noopener noreferrer">
+          <img src="${mediaUrl}" alt="Instagram activity from BuzzingBeez" loading="lazy" decoding="async">
+          <div class="instagram-activity__meta">${postedDate}<br>${caption.slice(0, 80)}</div>
+        </a>
+      `;
+    }).join('');
+
+    instagramFeedMessage.textContent = `Showing ${posts.length} recent Instagram activities.`;
+  } catch (error) {
+    instagramFeedMessage.textContent = 'Could not load Instagram activities right now. Please try again later or open our Instagram profile.';
+  }
+}
+
+loadInstagramActivities();
