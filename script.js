@@ -96,6 +96,20 @@ if (modal) {
   modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
 }
 
+const INSTAGRAM_POSTS = [
+  'https://www.instagram.com/p/REPLACE_POST_1/',
+  'https://www.instagram.com/p/REPLACE_POST_2/',
+  'https://www.instagram.com/p/REPLACE_POST_3/',
+  'https://www.instagram.com/p/REPLACE_POST_4/'
+];
+
+const instagramPostsContainer = document.querySelector('#instagram-posts');
+if (instagramPostsContainer) {
+  instagramPostsContainer.innerHTML = INSTAGRAM_POSTS.map((postUrl) => `
+    <blockquote class="instagram-media" data-instgrm-permalink="${postUrl}?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#FFF; border:0; margin:0; width:100%;"></blockquote>
+  `).join('');
+}
+
 if (window.instgrm && window.instgrm.Embeds) {
   window.instgrm.Embeds.process();
 }

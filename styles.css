@@ -364,6 +364,11 @@ iframe { width:100%; min-height:280px; border:0; border-radius:14px; }
   }
 }
 
+.instagram-feed__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+}
 .instagram-feed .instagram-media {
   border-radius: 14px !important;
   overflow: hidden !important;
