@@ -364,26 +364,9 @@ iframe { width:100%; min-height:280px; border:0; border-radius:14px; }
   }
 }
 
-.instagram-feed__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 0.85rem;
-}
-.instagram-activity {
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid #e5eaf0;
-  background: #fff;
-}
-.instagram-activity img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-}
-.instagram-activity__meta {
-  padding: .6rem .75rem .75rem;
-  font-size: .88rem;
-  color: var(--muted);
+.instagram-feed .instagram-media {
+  border-radius: 14px !important;
+  overflow: hidden !important;
 }
 .instagram-feed__message {
   color: var(--muted);
