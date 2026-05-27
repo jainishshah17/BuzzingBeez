@@ -1,3 +1,59 @@
+const INSTAGRAM_PROFILE = 'https://www.instagram.com/buzzingbeezdaycare/';
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function loadInstagramEmbedScript() {
+  if (document.querySelector('script[data-instagram-embed]')) {
+    if (window.instgrm) window.instgrm.Embeds.process();
+    return;
+  }
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://www.instagram.com/embed.js';
+  script.dataset.instagramEmbed = 'true';
+  script.onload = () => {
+    if (window.instgrm) window.instgrm.Embeds.process();
+  };
+  document.body.appendChild(script);
+}
+
+async function loadInstagramFeed() {
+  const container = document.querySelector('#instagram-feed');
+  if (!container) return;
+
+  const fallback = `<p class="instagram-embed-fallback">See our latest posts on <a href="${INSTAGRAM_PROFILE}" target="_blank" rel="noopener noreferrer">Instagram</a>.</p>`;
+
+  try {
+    const response = await fetch('data/instagram-posts.json');
+    if (!response.ok) throw new Error('Could not load Instagram posts');
+    const data = await response.json();
+    const posts = Array.isArray(data.posts) ? data.posts.slice(0, 3) : [];
+    if (!posts.length) throw new Error('No Instagram posts configured');
+
+    container.innerHTML = posts.map((post) => {
+      const permalink = `${post.url}${post.url.includes('?') ? '&' : '?'}utm_source=ig_embed&utm_campaign=loading`;
+      const label = escapeHtml(post.caption || 'View this post on Instagram');
+      const url = escapeHtml(post.url);
+      const permalinkAttr = escapeHtml(permalink);
+      return `<blockquote class="instagram-media" data-instgrm-permalink="${permalinkAttr}" data-instgrm-version="14"><a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a></blockquote>`;
+    }).join('');
+
+    container.removeAttribute('aria-busy');
+    loadInstagramEmbedScript();
+  } catch {
+    container.innerHTML = fallback;
+    container.removeAttribute('aria-busy');
+  }
+}
+
+loadInstagramFeed();
+
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav-links');
 if (toggle && nav) {
