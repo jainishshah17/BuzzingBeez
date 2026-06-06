@@ -88,6 +88,15 @@ const GOOGLE_FORM_CONFIG = {
   }
 };
 
+function getInquiryPhoneDigits(phone) {
+  return String(phone || '').replace(/\D/g, '');
+}
+
+function isValidInquiryPhone(phone) {
+  const digits = getInquiryPhoneDigits(phone);
+  return digits.length === 10 || (digits.length === 11 && digits.startsWith('1'));
+}
+
 const form = document.querySelector('#inquiry-form');
 if (form) {
   form.addEventListener('submit', async (e) => {
@@ -97,7 +106,21 @@ if (form) {
     if (success) success.style.display = 'none';
     if (failure) failure.style.display = 'none';
 
+    if (!form.reportValidity()) {
+      return;
+    }
+
     const formData = new FormData(form);
+    const phoneValue = String(formData.get('phone') || '').trim();
+    if (!isValidInquiryPhone(phoneValue)) {
+      if (failure) {
+        failure.textContent = 'Please enter a valid 10-digit phone number, including area code.';
+        failure.style.display = 'block';
+      }
+      const phoneInput = form.querySelector('input[name="phone"]');
+      if (phoneInput) phoneInput.focus();
+      return;
+    }
 
     if (!GOOGLE_FORM_CONFIG.formAction || !Object.values(GOOGLE_FORM_CONFIG.fields).every(Boolean)) {
       if (failure) {
@@ -118,7 +141,7 @@ if (form) {
       payload.append(`${GOOGLE_FORM_CONFIG.fields.startDate}_month`, month || '');
       payload.append(`${GOOGLE_FORM_CONFIG.fields.startDate}_day`, day || '');
     }
-    payload.append(GOOGLE_FORM_CONFIG.fields.phone, formData.get('phone') || '');
+    payload.append(GOOGLE_FORM_CONFIG.fields.phone, phoneValue);
     payload.append(GOOGLE_FORM_CONFIG.fields.message, formData.get('message') || '');
 
     try {
