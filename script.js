@@ -76,17 +76,60 @@ document.querySelectorAll('.fade-in').forEach((el) => {
 });
 
 const GOOGLE_FORM_CONFIG = {
-  // Replace with your Google Form "formResponse" endpoint
   formAction: 'https://docs.google.com/forms/d/e/1FAIpQLSf3vF4XCEYmsnPwg5ldDNoIBwY40u8qDvhmAHCkD1tBCrZDQA/formResponse',
   fields: {
     email: 'emailAddress',
     parentName: 'entry.1888711343',
     childAge: 'entry.488885004',
-    startDate: 'entry.1094695771', // Google date field base key
+    startDate: 'entry.1094695771',
     phone: 'entry.964629371',
     message: 'entry.794793296'
   }
 };
+
+// ── PHONE VALIDATION ─────────────────────────────────────────
+// Strips formatting and country code, then requires exactly 10 digits.
+// Accepts: (510) 674-7996 | 510-674-7996 | 5106747996 | +1 510 674 7996
+
+function validatePhone(raw) {
+  // Remove optional country code (+1 or leading 1 followed by separator)
+  const withoutCountryCode = raw.replace(/^\+?1[\s\-.]?/, '');
+  const digitsOnly = withoutCountryCode.replace(/\D/g, '');
+  return digitsOnly.length === 10 ? digitsOnly : null;
+}
+
+function showFieldError(input, message) {
+  input.setAttribute('aria-invalid', 'true');
+  input.style.outline = '2px solid #f87171';
+  input.style.outlineOffset = '2px';
+  const errorId = input.name + '-error';
+  let err = document.getElementById(errorId);
+  if (!err) {
+    err = document.createElement('span');
+    err.id = errorId;
+    err.setAttribute('role', 'alert');
+    err.style.cssText = 'color:#dc2626;font-size:13px;margin-top:4px;display:block;font-weight:500;';
+    input.parentNode.insertBefore(err, input.nextSibling);
+  }
+  err.textContent = message;
+  input.focus();
+}
+
+function clearFieldError(input) {
+  input.removeAttribute('aria-invalid');
+  input.style.outline = '';
+  input.style.outlineOffset = '';
+  const err = document.getElementById(input.name + '-error');
+  if (err) err.textContent = '';
+}
+
+// Clear phone error as user types
+const phoneInput = document.querySelector('#inquiry-form input[name="phone"]');
+if (phoneInput) {
+  phoneInput.addEventListener('input', () => clearFieldError(phoneInput));
+}
+
+// ── FORM SUBMISSION ───────────────────────────────────────────
 
 const form = document.querySelector('#inquiry-form');
 if (form) {
@@ -97,7 +140,22 @@ if (form) {
     if (success) success.style.display = 'none';
     if (failure) failure.style.display = 'none';
 
-    const formData = new FormData(form);
+    // ── Phone validation ──────────────────────────────────────
+    const rawPhone = (form.querySelector('input[name="phone"]')?.value || '').trim();
+    const validPhone = validatePhone(rawPhone);
+
+    if (!rawPhone) {
+      showFieldError(phoneInput, 'Phone number is required.');
+      return;
+    }
+    if (!validPhone) {
+      showFieldError(
+        phoneInput,
+        `Please enter a valid 10-digit US phone number (e.g. 510-674-7996). You entered ${rawPhone.replace(/\D/g, '').length} digit${rawPhone.replace(/\D/g, '').length === 1 ? '' : 's'}.`
+      );
+      return;
+    }
+    clearFieldError(phoneInput);
 
     if (!GOOGLE_FORM_CONFIG.formAction || !Object.values(GOOGLE_FORM_CONFIG.fields).every(Boolean)) {
       if (failure) {
@@ -107,6 +165,7 @@ if (form) {
       return;
     }
 
+    const formData = new FormData(form);
     const payload = new URLSearchParams();
     payload.append(GOOGLE_FORM_CONFIG.fields.email, formData.get('email') || '');
     payload.append(GOOGLE_FORM_CONFIG.fields.parentName, formData.get('parentName') || '');
@@ -118,7 +177,8 @@ if (form) {
       payload.append(`${GOOGLE_FORM_CONFIG.fields.startDate}_month`, month || '');
       payload.append(`${GOOGLE_FORM_CONFIG.fields.startDate}_day`, day || '');
     }
-    payload.append(GOOGLE_FORM_CONFIG.fields.phone, formData.get('phone') || '');
+    // Submit the cleaned 10-digit number
+    payload.append(GOOGLE_FORM_CONFIG.fields.phone, validPhone);
     payload.append(GOOGLE_FORM_CONFIG.fields.message, formData.get('message') || '');
 
     try {
